@@ -33,7 +33,7 @@ export default function Customer() {
     notes: "",
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -41,7 +41,7 @@ export default function Customer() {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const response = await axios.post("/api/login", formData); // Use Axios for POST request
@@ -95,7 +95,6 @@ export default function Customer() {
               <Textarea
                 id="address"
                 value={formData.address}
-                onChange={handleChange}
                 required
               />
             </div>
@@ -133,7 +132,7 @@ export default function Customer() {
               <Label htmlFor="notes">customer notes</Label>
               <Textarea
                 value={formData.notes}
-                onChange={handleChange}
+            
                 required
               />
             </div>

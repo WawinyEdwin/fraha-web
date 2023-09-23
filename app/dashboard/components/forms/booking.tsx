@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,8 +14,41 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
+import axios from "axios";
 
 export default function Booking() {
+  const [formData, setFormData] = useState({
+    customer: "",
+    date: "",
+    status: "",
+    notes: "",
+    time: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("/api/login", formData); // Use Axios for POST request
+
+      if (response.status === 200) {
+        // Authentication successful, redirect to the dashboard
+      } else {
+        // Authentication failed, handle error (e.g., display error message)
+        console.error("Login failed");
+      }
+    } catch (error) {
+      // Handle network or other errors
+      console.error("An error occurred:", error);
+    }
+  };
   return (
     <div className="container">
       <h1 className="text-center font-semibold">new booking</h1>
@@ -22,16 +56,27 @@ export default function Booking() {
         <div className="grid grid-cols-2 gap-4 p-2">
           <div className="flex flex-col space-y-1.5">
             <Label htmlFor="customer">customer</Label>
-            <Input type="text" />
+            <Input
+              type="text"
+              value={formData.customer}
+              onChange={handleChange}
+              required
+            />
           </div>
           <div className="flex flex-col space-y-1.5">
             <Label htmlFor="date">date</Label>
-            <Input type="date" />
+            <Input
+              id="date"
+              type="date"
+              value={formData.date}
+              onChange={handleChange}
+              required
+            />
           </div>
           <div className="flex flex-col space-y-1.5">
-            <Label htmlFor="">service</Label>
+            <Label htmlFor="service">service</Label>
             <Select>
-              <SelectTrigger className="">
+              <SelectTrigger className="" id="service">
                 <SelectValue placeholder="Select service" />
               </SelectTrigger>
               <SelectContent>
@@ -45,7 +90,7 @@ export default function Booking() {
           <div className="flex flex-col space-y-1.5">
             <Label htmlFor="staff">staff</Label>
             <Select>
-              <SelectTrigger className="">
+              <SelectTrigger className="" id="staff">
                 <SelectValue placeholder="Select service" />
               </SelectTrigger>
               <SelectContent>
@@ -58,12 +103,18 @@ export default function Booking() {
           </div>
           <div className="flex flex-col space-y-1.5">
             <Label htmlFor="time">start time</Label>
-            <Input type="time" id="time" />
+            <Input
+              type="time"
+              id="time"
+              value={formData.time}
+              onChange={handleChange}
+              required
+            />
           </div>
           <div className="flex flex-col space-y-1.5">
             <Label htmlFor="status">booking status</Label>
             <Select>
-              <SelectTrigger className="">
+              <SelectTrigger className="" id="status">
                 <SelectValue placeholder="Select service" />
               </SelectTrigger>
               <SelectContent>
@@ -75,8 +126,8 @@ export default function Booking() {
             </Select>
           </div>
           <div className="flex flex-col space-y-1.5">
-            <Label htmlFor="noted">notes</Label>
-            <Textarea placeholder="Write appointment notes" />
+            <Label htmlFor="notes">notes</Label>
+            <Textarea placeholder="Write appointment notes" id="notes" />
           </div>
         </div>
         <div className="text-center">

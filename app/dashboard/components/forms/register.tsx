@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export default function Register() {
   const router = useRouter();
@@ -21,7 +22,7 @@ export default function Register() {
     password: "",
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -29,7 +30,7 @@ export default function Register() {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const response = await axios.post("/api/login", formData); // Use Axios for POST request
@@ -54,7 +55,7 @@ export default function Register() {
           <CardDescription>manage your beauty spa with ease</CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="email">email</Label>

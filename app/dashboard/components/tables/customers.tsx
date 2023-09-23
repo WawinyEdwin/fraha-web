@@ -12,7 +12,46 @@ import Link from "next/link";
 import React from "react";
 
 export default function Customers() {
-  const customers = [];
+ const customers = [
+   {
+     id: 1,
+     phone_number: "0712-345-678",
+     name: "John Doe",
+     id_number: "12345678",
+     email: "johndoe@example.com",
+     birthday: "1990-05-15",
+     anniversary: "2023-08-25",
+     location: "Nairobi",
+     gender: "Male",
+     source: "Referral",
+   },
+   {
+     id: 2,
+     phone_number: "0721-987-654",
+     name: "Jane Smith",
+     id_number: "87654321",
+     email: "janesmith@example.com",
+     birthday: "1985-11-10",
+     anniversary: "2023-09-30",
+     location: "Mombasa",
+     gender: "Female",
+     source: "Online Booking",
+   },
+   {
+     id: 3,
+     phone_number: "0733-555-555",
+     name: "Grace Williams",
+     id_number: "98765432",
+     email: "grace@example.com",
+     birthday: "1992-03-25",
+     anniversary: "2023-07-12",
+     location: "Kisumu",
+     gender: "Female",
+     source: "Walk-in",
+   },
+   // Add more entries as needed
+ ];
+
   return (
     <div className="container">
       <div className="flex items-center justify-between space-y-2 pb-2">

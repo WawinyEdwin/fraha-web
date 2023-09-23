@@ -12,7 +12,43 @@ import Link from "next/link";
 import React from "react";
 
 export default function Bills() {
-  const bills = [];
+  const bills = [
+    {
+      id: 1,
+      phone_number: "0712-345-678",
+      service: "Haircut",
+      staff: "John",
+      quantity: 1,
+      price: 1000.0,
+      discount: 100.0,
+      total: 900.0,
+      date: "2023-09-25",
+    },
+    {
+      id: 2,
+      phone_number: "0721-987-654",
+      service: "Manicure",
+      staff: "Jane",
+      quantity: 2,
+      price: 800.0,
+      discount: 0.0,
+      total: 1600.0,
+      date: "2023-09-26",
+    },
+    {
+      id: 3,
+      phone_number: "0733-555-555",
+      service: "Massage",
+      staff: "Grace",
+      quantity: 1,
+      price: 1500.0,
+      discount: 200.0,
+      total: 1300.0,
+      date: "2023-09-27",
+    },
+    // Add more entries as needed
+  ];
+
   return (
     <div className="container">
       <div className="flex items-center justify-between space-y-2 pb-2">
