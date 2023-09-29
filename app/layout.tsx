@@ -1,10 +1,10 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Ubuntu } from 'next/font/google'
+import { Alegreya_Sans, IBM_Plex_Sans, PT_Sans, Rosario, Ubuntu } from 'next/font/google'
 
-const inter = Ubuntu({
+const ubuntu = Ubuntu({
   subsets: [],
-  weight: '300'
+  weight: '400'
 })
 
 export const metadata: Metadata = {
@@ -19,8 +19,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <main className="min-h-screen p-10">{children}</main>
+      <body className={ubuntu.className}>
+        <main className="min-h-screen p-10 pt-2">{children}</main>
       </body>
     </html>
   );
