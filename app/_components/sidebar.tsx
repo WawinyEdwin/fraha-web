@@ -126,6 +126,53 @@ export default function Sidebar() {
                 </li>
                 <li className="rounded-sm">
                   <Link
+                    href="/feedback"
+                    className="flex items-center p-2 space-x-3 rounded-md"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      className="lucide lucide-rss"
+                    >
+                      <path d="M4 11a9 9 0 0 1 9 9" />
+                      <path d="M4 4a16 16 0 0 1 16 16" />
+                      <circle cx="5" cy="19" r="1" />
+                    </svg>
+                    <span>feedback</span>
+                  </Link>
+                </li>
+                <li className="rounded-sm">
+                  <Link
+                    href="/bookings/online"
+                    className="flex items-center p-2 space-x-3 rounded-md"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      className="lucide lucide-toggle-right"
+                    >
+                      <rect width="20" height="12" x="2" y="6" rx="6" ry="6" />
+                      <circle cx="16" cy="12" r="2" />
+                    </svg>
+                    <span>online booking</span>
+                  </Link>
+                </li>
+                <li className="rounded-sm">
+                  <Link
                     href="/reports"
                     className="flex items-center p-2 space-x-3 rounded-md"
                   >
@@ -145,6 +192,31 @@ export default function Sidebar() {
                       <path d="m19 9-5 5-4-4-3 3" />
                     </svg>
                     <span>reports</span>
+                  </Link>
+                </li>
+                <li className="rounded-sm">
+                  <Link
+                    href="/inventory"
+                    className="flex items-center p-2 space-x-3 rounded-md"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      className="lucide lucide-folder-kanban"
+                    >
+                      <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z" />
+                      <path d="M8 10v4" />
+                      <path d="M12 10v2" />
+                      <path d="M16 10v6" />
+                    </svg>
+                    <span>product inventory</span>
                   </Link>
                 </li>
                 <li className="rounded-sm">
