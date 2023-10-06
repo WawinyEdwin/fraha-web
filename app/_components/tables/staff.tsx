@@ -128,11 +128,8 @@ export default function Staff() {
                           </SelectTrigger>
                           <SelectContent>
                             {services.map((service) => (
-                              <SelectGroup>
-                                <SelectItem
-                                  value={service.name}
-                                  key={service.id}
-                                >
+                              <SelectGroup key={service.id}>
+                                <SelectItem value={service.name}>
                                   {service.name}
                                 </SelectItem>
                               </SelectGroup>
