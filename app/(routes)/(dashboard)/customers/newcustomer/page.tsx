@@ -1,5 +1,5 @@
+import Customer from "@/app/_components/forms/customer";
 import React from "react";
-import Customer from "../../../_components/forms/customer";
 
 export default function Page() {
   return <Customer />;
