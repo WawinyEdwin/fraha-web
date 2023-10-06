@@ -23,7 +23,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { IService } from "../types";
+import { IService } from "../../../lib/types";
+import { toast } from "@/components/ui/use-toast";
 
 export default function NewStaff() {
   const [services, setServices] = useState<IService[]>([]);
@@ -32,15 +33,18 @@ export default function NewStaff() {
     async function fetchData() {
       try {
         const res = await getServices();
-        setServices(res);
+        setServices(res?.data);
       } catch (error) {
-        alert(error);
+        toast({
+          description: "error getting services",
+          variant: "destructive",
+        });
       }
     }
     fetchData();
   }, []);
   return (
-    <div className="mx-auto flex items-center justify-center">
+    <div className=" flex  justify-center">
       <Card className="w-[450px]">
         <CardHeader>
           <CardTitle>looks like your team is growing</CardTitle>

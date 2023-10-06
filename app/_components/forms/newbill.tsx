@@ -1,5 +1,5 @@
-"use client"
-import { useState } from "react";
+"use client";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,27 +13,63 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { IService, IStaff } from "@/lib/types";
+import { getServices, getStaff } from "@/lib/axios";
+import { toast } from "@/components/ui/use-toast";
 
 export default function NewBill() {
+  const router = useRouter();
+  const [services, setServices] = useState<IService[]>([]);
+  const [staff, setStaff] = useState<IStaff[]>([]);
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const res = await getStaff();
+        const data: IStaff[] = res?.data;
+        setStaff(data);
+      } catch (error) {
+        toast({
+          description: "error getting staff",
+          variant: "destructive",
+        });
+      }
+      try {
+        const res = await getServices();
+        const data: IService[] = res?.data;
+        setServices(data);
+      } catch (error) {
+        toast({
+          description: "error getting services",
+          variant: "destructive",
+        });
+      }
+    }
+    fetchData();
+  }, []);
   const [formData, setFormData] = useState({
     customer: "",
     date: "",
     service: "",
     staff: "",
-    quantity: "",
-    price: "",
-    discount: "",
-    total: "",
+    quantity: 0,
+    price: 0.0,
+    discount: 0,
+    cash: 0,
+    card: 0,
   });
-
-  const handleChange = (e: { target: { id: any; value: any; }; }) => {
+  const today_date = new Date().toDateString();
+  const subTotal = formData.quantity * formData.price;
+  const total = subTotal;
+  const grandTotal = subTotal - formData.discount / 100;
+  const payable = formData.card + formData.cash;
+  const change = payable - grandTotal;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [id]: value,
     }));
   };
-
   const handleSelectChange = (name: string, selectedValue: string) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -41,31 +77,35 @@ export default function NewBill() {
     }));
   };
 
-  const router = useRouter();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  };
 
   return (
     <div className="container mx-auto">
       <h1 className="text-2xl font-semibold mb-4">quick sale</h1>
       <div className="grid grid-cols-2 gap-4">
         <div className="col-span-1">
-          <form className="grid grid-cols-2 items-center gap-4">
+          <form
+            className="grid grid-cols-2 items-center gap-4"
+            onSubmit={handleSubmit}
+          >
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="customer">customer</Label>
               <Input
                 id="customer"
                 type="tel"
+                list="customer-list"
                 value={formData.customer}
                 onChange={handleChange}
               />
+              <datalist id="customer-list">
+                <option value="+254759701314" />
+              </datalist>
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="date">date</Label>
-              <Input
-                id="date"
-                type="date"
-                value={formData.date}
-                onChange={handleChange}
-              />
+              <p className="font-bold">{today_date}</p>
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="service">service</Label>
@@ -73,20 +113,17 @@ export default function NewBill() {
                 <SelectTrigger id="service">
                   <SelectValue placeholder="Select" />
                 </SelectTrigger>
-                <SelectContent position="popper">
-                  <SelectItem
-                    value="Cut"
-                    onClick={() => handleSelectChange("service", "Cut")}
-                  >
-                    Cut
-                  </SelectItem>
-                  <SelectItem
-                    value="braids"
-                    onClick={() => handleSelectChange("service", "Braids")}
-                  >
-                    Braids
-                  </SelectItem>
-                </SelectContent>
+                {services ? (
+                  <SelectContent position="popper">
+                    {services.map((sv) => (
+                      <SelectItem key={sv.id} value={sv.id}>
+                        {sv.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                ) : (
+                  <></>
+                )}
               </Select>
             </div>
             <div className="flex flex-col space-y-1.5">
@@ -95,14 +132,27 @@ export default function NewBill() {
                 <SelectTrigger id="staff">
                   <SelectValue placeholder="Select" />
                 </SelectTrigger>
-                <SelectContent position="popper">
-                  <SelectItem value="John">John</SelectItem>
-                  <SelectItem value="Doe">Doe</SelectItem>
-                </SelectContent>
+                {staff.length > 0 ? (
+                  <SelectContent position="popper">
+                    {staff.map((stf) => (
+                      <SelectItem value={stf.id} key={stf.id}>
+                        {stf.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                ) : (
+                  <>
+                    <SelectContent position="popper">
+                      <Link href={"/staff/new"}>
+                        <Button>add staff</Button>
+                      </Link>
+                    </SelectContent>
+                  </>
+                )}
               </Select>
             </div>
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="quantity">quantity</Label>
+              <Label htmlFor="quantity">quantity </Label>
               <Input
                 id="quantity"
                 type="number"
@@ -120,7 +170,9 @@ export default function NewBill() {
               />
             </div>
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="discount">discount</Label>
+              <Label htmlFor="discount">
+                discount <span>%</span>
+              </Label>
               <Input
                 id="discount"
                 type="number"
@@ -130,46 +182,80 @@ export default function NewBill() {
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="total">total</Label>
-              <Input
-                id="total"
-                type="text"
-                value={formData.total}
-                onChange={handleChange}
-              />
+              <p className="font-bold">{total}</p>
             </div>
           </form>
         </div>
-        <div className="col-span-1 p-4 border border-gray-300">
-          <h2 className="text-lg font-semibold mb-4 text-center">billing summary</h2>
-          <div>
+        <div className="bg-white shadow-md p-4 rounded-lg">
+          <h2 className="text-lg font-semibold mb-4 text-center">Receipt</h2>
+          <div className="mb-4">
             <p>
               <strong>Customer:</strong> {formData.customer}
             </p>
             <p>
-              <strong>Date:</strong> {formData.date}
-            </p>
-            <p>
               <strong>Service:</strong> {formData.service}
             </p>
-            <p>
-              <strong>Staff:</strong> {formData.staff}
-            </p>
-            <p>
-              <strong>Quantity:</strong> {formData.quantity}
-            </p>
-            <p>
-              <strong>Price:</strong> {formData.price}
-            </p>
-            <p>
-              <strong>Discount:</strong> {formData.discount}
-            </p>
-            <p>
-              <strong>Total:</strong> {formData.total}
-            </p>
           </div>
-          <div className="flex justify-center mt-4">
-            <Button variant={'outline'} className="mr-4">reset</Button>
-            <Button onClick={() => router.push("/checkout")}>checkout</Button>
+          <div className="border-t border-b border-gray-300 py-2">
+            <div className="flex justify-between pb-2">
+              <p>
+                <strong>Sub Total:</strong>
+              </p>
+              <p>KES {subTotal}</p>
+            </div>
+            <div className="flex justify-between pb-2">
+              <p>
+                <strong>Grand Total:</strong>
+              </p>
+              <p>KES {grandTotal}</p>
+            </div>
+            <div className="flex justify-between pb-2">
+              <p>
+                <strong>Change:</strong>
+              </p>
+              <p>KES {change}</p>
+            </div>
+          </div>
+          <div className="mt-4">
+            <h2 className="text-lg font-semibold mb-2">Payment Method</h2>
+            <div className="flex justify-between pb-2">
+              <p>
+                <strong>Cash:</strong>
+              </p>
+              <Input
+                type="number"
+                id="cash"
+                className="px-2 py-1 rounded w-1/2"
+                placeholder="enter cash amount"
+                onChange={handleChange}
+                value={formData.cash}
+              />
+            </div>
+            <div className="flex justify-between">
+              <p>
+                <strong>Card:</strong>
+              </p>
+              <Input
+                type="number"
+                id="card"
+                className="px-2 py-1 rounded w-1/2"
+                placeholder="enter card amount"
+                onChange={handleChange}
+                value={formData.card}
+              />
+            </div>
+          </div>
+          <div className="flex justify-between mt-4">
+            <Button variant={"outline"} className=" px-4 py-2  rounded mr-4">
+              Reset
+            </Button>
+            <Button
+              className=" px-4 py-2 rounded"
+              type="submit"
+              onClick={() => router.push("/checkout")}
+            >
+              Checkout
+            </Button>
           </div>
         </div>
       </div>

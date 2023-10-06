@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   env: {
-    api: "http://localhost:8080",
+    api: process.env.BACKEND,
   },
 };
 

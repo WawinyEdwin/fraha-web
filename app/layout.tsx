@@ -1,3 +1,4 @@
+import { Toaster } from '@/components/ui/toaster';
 import './globals.css'
 import type { Metadata } from 'next'
 import { Alegreya_Sans, IBM_Plex_Sans, Inter, PT_Sans, Rosario, Ubuntu } from 'next/font/google'
@@ -9,11 +10,11 @@ const ubuntu = Ubuntu({
 
 const inter = Inter({
   subsets: [],
-  weight: "400",
+  weight: "300",
 });
 export const metadata: Metadata = {
-  title: 'Bry',
-  description: 'Manage your salon effectively',
+  title: 'fraha',
+  description: 'streamline your salon and spa management with our powerful software, effortlessly manage appointments, clients, and more'
 }
 
 export default function RootLayout({
@@ -25,6 +26,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <main className="min-h-screen p-10 pt-4">{children}</main>
+        <Toaster />
       </body>
     </html>
   );

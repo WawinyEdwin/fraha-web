@@ -16,8 +16,10 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { loginUser } from "@/lib/axios";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function Login() {
+  const { toast } = useToast();
   const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
@@ -34,13 +36,20 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const res = await loginUser(formData);
-    console.log(res?.data);
-    if (res?.status === 200) {
-      localStorage.setItem("access_token", res?.data.session.access_token)
-      router.push("/dashboard");
-    } else {
-      alert("Login Failed");
+    try {
+      const res = await loginUser(formData);
+      console.log(res.status);
+      
+      if (res?.status === 200) {
+        localStorage.setItem("access_token", res?.data.session.access_token);
+        router.push("/dashboard");
+      }
+    } catch (error) {
+      toast({
+        title: "login failed",
+        description: "could not log you in",
+        variant: 'destructive'
+      });
     }
   };
   return (

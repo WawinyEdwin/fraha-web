@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,9 +14,13 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
-import axios from "axios";
+import { getServices } from "@/lib/axios";
+import { bookingStatuses } from "@/app/data";
+import { Separator } from "@/components/ui/separator";
 
 export default function Booking() {
+  const [staff, setStaff] = useState([]);
+  const [services, setServices] = useState([]);
   const [formData, setFormData] = useState({
     customer: "",
     date: "",
@@ -35,20 +39,19 @@ export default function Booking() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      const response = await axios.post("/api/login", formData); // Use Axios for POST request
-
-      if (response.status === 200) {
-        // Authentication successful, redirect to the dashboard
-      } else {
-        // Authentication failed, handle error (e.g., display error message)
-        console.error("Login failed");
-      }
-    } catch (error) {
-      // Handle network or other errors
-      console.error("An error occurred:", error);
-    }
   };
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const res = await getServices();
+        setServices(res);
+      } catch (error) {
+        alert(error);
+      }
+    }
+    fetchData();
+  });
   return (
     <div className="container">
       <div className="p-3">
@@ -62,7 +65,6 @@ export default function Booking() {
                 value={formData.customer}
                 onChange={handleChange}
                 required
-
               />
             </div>
             <div className="flex flex-col space-y-1.5">
@@ -82,10 +84,11 @@ export default function Booking() {
                   <SelectValue placeholder="Select service" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Fruits</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                  </SelectGroup>
+                  {services.map((serv) => (
+                    <SelectGroup key={serv.id}>
+                      <SelectItem value={serv.id}>{serv.name}</SelectItem>
+                    </SelectGroup>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -93,7 +96,7 @@ export default function Booking() {
               <Label htmlFor="staff">staff</Label>
               <Select>
                 <SelectTrigger className="" id="staff">
-                  <SelectValue placeholder="Select service" />
+                  <SelectValue placeholder="Select staff" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
@@ -120,10 +123,11 @@ export default function Booking() {
                   <SelectValue placeholder="Select service" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>new appointment</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                  </SelectGroup>
+                  {bookingStatuses.map((status) => (
+                    <SelectGroup key={status.id}>
+                      <SelectItem value={status.id}>{status.name}</SelectItem>
+                    </SelectGroup>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -132,7 +136,8 @@ export default function Booking() {
               <Textarea placeholder="Write appointment notes" id="notes" />
             </div>
           </div>
-          <div className="text-center">
+          <Separator />
+          <div className="text-center pt-3">
             <div className="flex justify-between">
               <Button variant={"outline"}>
                 <Link href={"/register"}>cancel</Link>
