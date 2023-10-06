@@ -17,10 +17,11 @@ import Link from "next/link";
 import { getServices } from "@/lib/axios";
 import { bookingStatuses } from "@/app/data";
 import { Separator } from "@/components/ui/separator";
+import { IService} from "@/lib/types";
 
 export default function Booking() {
   const [staff, setStaff] = useState([]);
-  const [services, setServices] = useState([]);
+  const [services, setServices] = useState<IService[]>([]);
   const [formData, setFormData] = useState({
     customer: "",
     date: "",
@@ -45,7 +46,7 @@ export default function Booking() {
     async function fetchData() {
       try {
         const res = await getServices();
-        setServices(res);
+        setServices(res.data);
       } catch (error) {
         alert(error);
       }
@@ -86,7 +87,7 @@ export default function Booking() {
                 <SelectContent>
                   {services.map((serv) => (
                     <SelectGroup key={serv.id}>
-                      <SelectItem value={serv.id}>{serv.name}</SelectItem>
+                      <SelectItem value={serv.name}>{serv.name}</SelectItem>
                     </SelectGroup>
                   ))}
                 </SelectContent>
@@ -125,7 +126,7 @@ export default function Booking() {
                 <SelectContent>
                   {bookingStatuses.map((status) => (
                     <SelectGroup key={status.id}>
-                      <SelectItem value={status.id}>{status.name}</SelectItem>
+                      <SelectItem value={status.name}>{status.name}</SelectItem>
                     </SelectGroup>
                   ))}
                 </SelectContent>
